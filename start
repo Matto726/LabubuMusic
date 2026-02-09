@@ -1,0 +1,5 @@
+#!/bin/bash
+# Labubu Music Startup Script
+
+echo "Starting Labubu Music Client..."
+python3 -m LabubuMusic

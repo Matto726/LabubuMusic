@@ -1,0 +1,95 @@
+{
+  "name": "Labubu Music",
+  "description": "A powerful, scalable Telegram Music Bot built with Python, Pyrogram, and PyTgCalls.",
+  "logo": "https://telegra.ph/file/c5952790fa8235f499749.jpg",
+  "keywords": [
+    "music-bot",
+    "python",
+    "telegram",
+    "pyrogram",
+    "pytgcalls",
+    "labubu-music",
+    "audio-stream",
+    "telegram-bot"
+  ],
+  "repository": "https://github.com/Matto726/LabubuMusic",
+  "website": "https://t.me/Laboobubots",
+  "success_url": "https://t.me/Laboobubots",
+  "env": {
+    "API_ID": {
+      "description": "Your Telegram API ID from https://my.telegram.org",
+      "required": true
+    },
+    "API_HASH": {
+      "description": "Your Telegram API HASH from https://my.telegram.org",
+      "required": true
+    },
+    "BOT_TOKEN": {
+      "description": "The Bot Token obtained from @BotFather",
+      "required": true
+    },
+    "MONGO_DB_URI": {
+      "description": "MongoDB Connection String (MongoDB Atlas)",
+      "required": true
+    },
+    "OWNER_ID": {
+      "description": "Telegram User ID of the bot owner (Integer)",
+      "required": true
+    },
+    "LOG_GROUP_ID": {
+      "description": "ID of the group for logging (Must be a Supergroup, start with -100)",
+      "required": true
+    },
+    "STRING1": {
+      "description": "Pyrogram Session String for Assistant 1",
+      "required": true
+    },
+    "STRING2": {
+      "description": "Pyrogram Session String for Assistant 2 (Optional)",
+      "required": false
+    },
+    "STRING3": {
+      "description": "Pyrogram Session String for Assistant 3 (Optional)",
+      "required": false
+    },
+    "STRING4": {
+      "description": "Pyrogram Session String for Assistant 4 (Optional)",
+      "required": false
+    },
+    "STRING5": {
+      "description": "Pyrogram Session String for Assistant 5 (Optional)",
+      "required": false
+    },
+    "HEROKU_API_KEY": {
+      "description": "Your Heroku API Key",
+      "required": true
+    },
+    "HEROKU_APP_NAME": {
+      "description": "The exact name of your Heroku App",
+      "required": true
+    },
+    "UPSTREAM_REPO": {
+      "description": "Git repository URL for updates",
+      "value": "https://github.com/Matto726/LabubuMusic",
+      "required": false
+    },
+    "SUPPORT_CHANNEL": {
+      "description": "Link to your news channel",
+      "value": "https://t.me/Laboobubots",
+      "required": false
+    },
+    "SUPPORT_GROUP": {
+      "description": "Link to your support group",
+      "value": "https://t.me/Laboobubots",
+      "required": false
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    },
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-ffmpeg-latest.git"
+    }
+  ]
+}

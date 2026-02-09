@@ -1,0 +1,107 @@
+#!/bin/bash
+
+# Color Codes
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
+RESET='\033[0m'
+
+# Logger Function
+log_msg() {
+    local color="${PURPLE}"
+    [ ! -z "$2" ] && eval "color=\$$2"
+    printf "${color}$1${RESET}"
+}
+
+# User Prompt
+confirm_action() {
+    local old_stty=$(stty -g)
+    stty raw -echo
+    local answer=$(head -c 1)
+    stty $old_stty
+    echo "$answer" | grep -iq "^y"
+}
+
+# System Update
+sys_update() {
+    log_msg "\n╭── Updating System Packages...\n" "BLUE"
+    
+    sudo apt update 2>&1 | grep "can be upgraded" &>/dev/null
+    if [ $? -eq 0 ]; then
+        log_msg "⚠ Updates found.\n" "YELLOW"
+        log_msg "Proceed with upgrade? (y/n): " "RESET"
+        if confirm_action; then
+            log_msg "\n➤ Upgrading...\n" "GREEN"
+            sudo apt upgrade -y
+        else
+            log_msg "\n➤ Skipped upgrade.\n" "RED"
+        fi
+    else
+        log_msg "✓ System is up to date.\n" "GREEN"
+    fi
+}
+
+# Dependency Installation
+install_core_libs() {
+    log_msg "\n╭── Installing Dependencies...\n" "BLUE"
+    
+    packages=(
+        python3-pip
+        python3-venv
+        ffmpeg
+        git
+        nodejs
+        npm
+        pv
+        jq
+    )
+    
+    for pkg in "${packages[@]}"; do
+        if ! dpkg -s $pkg >/dev/null 2>&1; then
+            log_msg "➤ Installing $pkg...\n" "YELLOW"
+            sudo apt install -y $pkg
+        fi
+    done
+}
+
+# Python Environment
+setup_python_env() {
+    log_msg "\n╭── Configuring Python...\n" "BLUE"
+    
+    if [ ! -d "venv" ]; then
+        python3 -m venv venv
+    fi
+    
+    source venv/bin/activate
+    pip install --upgrade pip setuptools wheel
+    
+    if [ -f "requirements.txt" ]; then
+        pip install -r requirements.txt
+    else
+        log_msg "⚠ requirements.txt not found!\n" "RED"
+    fi
+}
+
+# Main Execution
+clear
+log_msg "\n╔════════════════════════════════════╗\n" "PURPLE"
+log_msg "║      LabubuMusic Auto-Installer    ║\n" "PURPLE"
+log_msg "╚════════════════════════════════════╝\n\n" "PURPLE"
+
+sleep 1
+
+# Check Root/Sudo
+if [ "$EUID" -ne 0 ] && ! command -v sudo &> /dev/null; then
+    log_msg "⚠ Root privileges required.\n" "RED"
+    exit 1
+fi
+
+sys_update
+install_core_libs
+setup_python_env
+
+log_msg "\n╔════════════════════════════════════╗\n" "GREEN"
+log_msg "║      Setup Completed Successfully  ║\n" "GREEN"
+log_msg "╚════════════════════════════════════╝\n\n" "GREEN"
